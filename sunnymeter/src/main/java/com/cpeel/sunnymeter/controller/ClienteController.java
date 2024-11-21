@@ -2,9 +2,8 @@ package com.cpeel.sunnymeter.controller;
 
 import com.cpeel.sunnymeter.model.Cliente;
 import com.cpeel.sunnymeter.service.ClienteService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,36 +13,26 @@ import java.util.UUID;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final ClienteService clienteService;
+    @Autowired
+    private ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
-    }
-
-    // Método para cadastrar um cliente
     @PostMapping
-    public ResponseEntity<Cliente> cadastrarCliente(@Valid @RequestBody Cliente cliente) {
-        // Chama o método do serviço para salvar o cliente
-        Cliente novoCliente = clienteService.salvar(cliente);
-        // Retorna a resposta com o cliente cadastrado
-        return ResponseEntity.status(201).body(novoCliente);  // Retorna 201 Created
+    public Cliente criarCliente(@RequestBody Cliente cliente) {
+        return clienteService.criarCliente(cliente);
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> clientes = clienteService.listarTodos();
-        return ResponseEntity.ok(clientes);
+    public List<Cliente> listarClientes() {
+        return clienteService.listarClientes();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarCliente(@PathVariable UUID id) {
-        Optional<Cliente> cliente = clienteService.buscarPorId(id);
-        return cliente.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{clienteUuid}")
+    public Optional<Cliente> buscarCliente(@PathVariable UUID clienteUuid) {
+        return clienteService.buscarCliente(clienteUuid);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable UUID id) {
-        clienteService.deletarPorId(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{clienteUuid}")
+    public boolean deletarCliente(@PathVariable UUID clienteUuid) {
+        return clienteService.deletarCliente(clienteUuid);
     }
 }

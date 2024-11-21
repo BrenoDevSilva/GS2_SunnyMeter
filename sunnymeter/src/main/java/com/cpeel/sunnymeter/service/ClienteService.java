@@ -2,6 +2,7 @@ package com.cpeel.sunnymeter.service;
 
 import com.cpeel.sunnymeter.model.Cliente;
 import com.cpeel.sunnymeter.repository.ClienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,25 +12,29 @@ import java.util.UUID;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository clienteRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
-
-    public Cliente salvar(Cliente cliente) {
+    public Cliente criarCliente(Cliente cliente) {
+        cliente.setAtivo(true);
         return clienteRepository.save(cliente);
     }
 
-    public List<Cliente> listarTodos() {
+    public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }
 
-    public Optional<Cliente> buscarPorId(UUID id) {
-        return clienteRepository.findById(id);
+    public Optional<Cliente> buscarCliente(UUID clienteUuid) {
+        return clienteRepository.findById(clienteUuid);
     }
 
-    public void deletarPorId(UUID id) {
-        clienteRepository.deleteById(id);
+    public boolean deletarCliente(UUID clienteUuid) {
+        Optional<Cliente> cliente = clienteRepository.findById(clienteUuid);
+        if (cliente.isPresent()) {
+            cliente.get().setAtivo(false);
+            clienteRepository.save(cliente.get());
+            return true;
+        }
+        return false;
     }
 }

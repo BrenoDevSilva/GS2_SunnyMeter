@@ -1,42 +1,74 @@
 package com.cpeel.sunnymeter.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
 import java.util.UUID;
 
 @Entity
-@Data
-@NoArgsConstructor
 public class Cliente {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID clienteUuid;
-
-    @NotBlank(message = "O nome é obrigatório")
     private String nome;
-
-    @NotBlank(message = "O endereço é obrigatório")
     private String endereco;
-
-    @NotBlank(message = "O documento é obrigatório")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}",
-            message = "O documento deve ser CPF ou CNPJ válido")
     private String documento;
-
-    @NotBlank(message = "O tipo de cliente é obrigatório")
-    @Pattern(regexp = "PF|PJ", message = "O tipo de cliente deve ser PF ou PJ")
-    private String tipoCliente;
-
-    @NotBlank(message = "O CEP é obrigatório")
-    @Pattern(regexp = "\\d{5}-\\d{3}", message = "O CEP deve estar no formato 00000-000")
+    private String tipo;
     private String cep;
+    private boolean ativo;
 
-    @NotNull
-    private Boolean ativo;
+    public UUID getClienteUuid() {
+        return clienteUuid;
+    }
+
+    public void setClienteUuid(UUID clienteUuid) {
+        this.clienteUuid = clienteUuid;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
 }
